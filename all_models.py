@@ -162,7 +162,6 @@ for model_name, config in models_config.items():
         plt.legend(fontsize=font)
         plt.xticks(x, fontsize=font)
         plt.yticks(fontsize=font)
-        # plt.text(0.5, 0.5, f'R2: {r2:.4f}', fontsize=font, ha='center', va='center')
         plt.tight_layout()
         plt.savefig(f'{plot_dir}/{target}_bar_comparison.png')
         plt.close()
@@ -175,10 +174,9 @@ for model_name, config in models_config.items():
             'Predicted_Value': y_pred
         })
         results_df.to_csv(f'{results_dir}/{target}_results.csv', index=False)
-        # # Plot actual vs predicted
+        # Plot actual vs predicted
         plt.figure(figsize=(9, 6))
         plt.subplots_adjust(left=0.15, right=0.95, top=0.90, bottom=0.15)
-        # plt.scatter(y_test[target], y_pred, alpha=0.5, label='Test Data (Mo=1)')
         plt.scatter(y_train_val, y_train_val_pred, alpha=0.5, label='Train Data')
         plt.scatter(y_val[target], y_val_pred, alpha=1, label='Validation Data')
         plt.plot([min(y_test[target].min(), y_train[target].min()), 
@@ -191,19 +189,15 @@ for model_name, config in models_config.items():
         plt.xticks(fontsize=font)
         plt.yticks(fontsize=font)
         plt.title(f'Actual vs Predicted {target} ({model_name})', fontsize=20)
-        # print(5*max(y_test[target])/7-10)
         y_target = np.concatenate([y_train[target], y_val[target]])
         plt.text(6*max(y_target)/8, max(y_train_val_pred)*.2, f'$R^2$ train: {r2t:.4f}', fontsize=font, ha='center', va='center')
         plt.text(6*max(y_target)/8, max(y_train_val_pred)*.1, f'$R^2$ val: {r2:.4f}', fontsize=font, ha='center', va='center')
         plt.legend(fontsize=font)
-        # plt.tight_layout()
         plt.savefig(f'{plot_dir}/{target}_prediction_plot.png')
         plt.close()
         
         # Save model
         joblib.dump(model, f'{model_dir}/{target}_model.joblib')
-        
-        
         
         # Plot SHAP values for feature importance
         if hasattr(model, 'predict'):
@@ -239,7 +233,7 @@ for model_name, config in models_config.items():
             print(f"\nSHAP Feature Importance for {target} ({model_name}):")
             for feature, importance in zip(input_features, mean_shap):
                 print(f"{feature}: {importance:.4f}")
-        # if hasattr(model, 'feature_importances_'):
+            # Plot feature importance using model's feature importances
             feature_importance = model.feature_importances_
             sorted_idx = np.argsort(feature_importance)
             
