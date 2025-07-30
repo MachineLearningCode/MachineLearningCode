@@ -40,3 +40,34 @@ The dataset is in a file called `data.csv` with the following columns:
 ```bash
 pip install -r requirements.txt
 
+## 🚀 How to Run
+
+Follow these steps to execute the project:
+
+### 1. Prepare the Dataset
+
+Place your dataset in the root directory
+
+### 2. Install Dependencies
+
+Ensure you have Python3 installed, then run:
+
+```bash
+pip install -r requirements.txt
+
+### 3. Exceut the main script:
+python all_models.py
+
+### 4. Result
+After running the script, you’ll find:
+
+Trained models in: models/
+
+Scaler saved in: models/feature_scaler.joblib
+
+Evaluation plots in: plots/
+
+Test predictions in: results/
+
+Each model and gas is handled separately for modular analysis and inspection.
+
