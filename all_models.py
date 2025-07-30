@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
 import joblib
 import os
-# import shap
+import shap
 
 # Create directories for saving models and plots
 os.makedirs('all_models_mo_split/models', exist_ok=True)
@@ -203,59 +203,59 @@ for model_name, config in models_config.items():
         # Save model
         joblib.dump(model, f'{model_dir}/{target}_model.joblib')
         
-        # Plot feature importance if available
+        
         
         # Plot SHAP values for feature importance
-        # if hasattr(model, 'predict'):
-        #     # Create SHAP explainer based on model type
-        #     if isinstance(model, (RandomForestRegressor)):
-        #         explainer = shap.TreeExplainer(model)
-        #     else:
-        #         explainer = shap.KernelExplainer(model.predict, X_train_scaled[:100])
+        if hasattr(model, 'predict'):
+            # Create SHAP explainer based on model type
+            if isinstance(model, (RandomForestRegressor)):
+                explainer = shap.TreeExplainer(model)
+            else:
+                explainer = shap.KernelExplainer(model.predict, X_train_scaled[:100])
             
-        #     # Calculate SHAP values
-        #     shap_values = explainer.shap_values(X_val_scaled)
+            # Calculate SHAP values
+            shap_values = explainer.shap_values(X_val_scaled)
             
-        #     # Create and save SHAP summary plot
-        #     plt.figure()
-        #     shap.summary_plot(shap_values, X_val_scaled, feature_names=input_features, 
-        #                     show=False, plot_size=(10,8))
-        #     plt.title(f'SHAP Feature Importance for {target} ({model_name})')
-        #     plt.tight_layout()
-        #     plt.savefig(f'{plot_dir}/{target}_shap_importance.png')
-        #     plt.close()
+            # Create and save SHAP summary plot
+            plt.figure()
+            shap.summary_plot(shap_values, X_val_scaled, feature_names=input_features, 
+                            show=False, plot_size=(10,8))
+            plt.title(f'SHAP Feature Importance for {target} ({model_name})')
+            plt.tight_layout()
+            plt.savefig(f'{plot_dir}/{target}_shap_importance.png')
+            plt.close()
             
-        #     # Create and save SHAP bar plot
-        #     plt.figure()
-        #     shap.summary_plot(shap_values, X_val_scaled, feature_names=input_features,
-        #                     plot_type="bar", show=False)
-        #     plt.title(f'SHAP Feature Importance (Bar) for {target} ({model_name})')
-        #     plt.tight_layout() 
-        #     plt.savefig(f'{plot_dir}/{target}_shap_importance_bar.png')
-        #     plt.close()
+            # Create and save SHAP bar plot
+            plt.figure()
+            shap.summary_plot(shap_values, X_val_scaled, feature_names=input_features,
+                            plot_type="bar", show=False)
+            plt.title(f'SHAP Feature Importance (Bar) for {target} ({model_name})')
+            plt.tight_layout() 
+            plt.savefig(f'{plot_dir}/{target}_shap_importance_bar.png')
+            plt.close()
             
-        #     # Print mean absolute SHAP values
-        #     mean_shap = np.abs(shap_values).mean(axis=0)
-        #     print(f"\nSHAP Feature Importance for {target} ({model_name}):")
-        #     for feature, importance in zip(input_features, mean_shap):
-        #         print(f"{feature}: {importance:.4f}")
-        # # if hasattr(model, 'feature_importances_'):
-        #     feature_importance = model.feature_importances_
-        #     sorted_idx = np.argsort(feature_importance)
+            # Print mean absolute SHAP values
+            mean_shap = np.abs(shap_values).mean(axis=0)
+            print(f"\nSHAP Feature Importance for {target} ({model_name}):")
+            for feature, importance in zip(input_features, mean_shap):
+                print(f"{feature}: {importance:.4f}")
+        # if hasattr(model, 'feature_importances_'):
+            feature_importance = model.feature_importances_
+            sorted_idx = np.argsort(feature_importance)
             
-        #     plt.figure(figsize=(10, 6))
-        #     plt.barh(range(len(sorted_idx)), feature_importance[sorted_idx])
-        #     plt.yticks(range(len(sorted_idx)), [input_features[i] for i in sorted_idx])
-        #     plt.xlabel('Feature Importance')
-        #     plt.title(f'Feature Importance for {target} ({model_name})\nMo=0 Training, Mo=1 Testing')
-        #     plt.tight_layout()
-        #     plt.savefig(f'{plot_dir}/{target}_feature_importance.png')
-        #     plt.close()
+            plt.figure(figsize=(10, 6))
+            plt.barh(range(len(sorted_idx)), feature_importance[sorted_idx])
+            plt.yticks(range(len(sorted_idx)), [input_features[i] for i in sorted_idx])
+            plt.xlabel('Feature Importance')
+            plt.title(f'Feature Importance for {target} ({model_name})\nMo=0 Training, Mo=1 Testing')
+            plt.tight_layout()
+            plt.savefig(f'{plot_dir}/{target}_feature_importance.png')
+            plt.close()
             
-        #     # Print feature importance values
-        #     print(f"\nFeature Importance for {target} ({model_name}):")
-        #     for feature, importance in zip(input_features, feature_importance):
-        #         print(f"{feature}: {importance:.4f}")
+            # Print feature importance values
+            print(f"\nFeature Importance for {target} ({model_name}):")
+            for feature, importance in zip(input_features, feature_importance):
+                print(f"{feature}: {importance:.4f}")
 
 # Save the scaler for future use
 joblib.dump(scaler, 'all_models_mo_split/models/feature_scaler.joblib')
@@ -271,18 +271,18 @@ for model_name in models_config.keys():
         print(f"MAE: {all_mae_scores[model_name][target]:.4f}")
 
 # Create comparison plots for each target variable
-# for target in target_variables:
-#     plt.figure(figsize=(12, 8))
-#     for model_name in models_config.keys():
-#         y_pred = all_predictions[model_name][target]
-#         plt.scatter(y_test[target], y_pred, alpha=0.5, label=f'{model_name} (R2: {all_r2_scores[model_name][target]:.4f})')
+for target in target_variables:
+    plt.figure(figsize=(12, 8))
+    for model_name in models_config.keys():
+        y_pred = all_predictions[model_name][target]
+        plt.scatter(y_test[target], y_pred, alpha=0.5, label=f'{model_name} (R2: {all_r2_scores[model_name][target]:.4f})')
     
-#     plt.plot([y_test[target].min(), y_test[target].max()], 
-#              [y_test[target].min(), y_test[target].max()], 
-#              'r--', lw=2)
-#     plt.xlabel('Actual Values')
-#     plt.ylabel('Predicted Values')
-#     plt.title(f'Model Comparison for {target}\nMo=0 Training, Mo=1 Testing')
-#     plt.legend()
-#     plt.savefig(f'all_models_mo_split/plots/{target}_model_comparison.png')
-#     plt.close() 
+    plt.plot([y_test[target].min(), y_test[target].max()], 
+             [y_test[target].min(), y_test[target].max()], 
+             'r--', lw=2)
+    plt.xlabel('Actual Values')
+    plt.ylabel('Predicted Values')
+    plt.title(f'Model Comparison for {target}\nMo=0 Training, Mo=1 Testing')
+    plt.legend()
+    plt.savefig(f'all_models_mo_split/plots/{target}_model_comparison.png')
+    plt.close() 
