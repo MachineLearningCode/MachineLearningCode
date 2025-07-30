@@ -39,6 +39,7 @@ The dataset is in a file called `data.csv` with the following columns:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ## 🚀 How to Run
 
@@ -54,6 +55,7 @@ Ensure you have Python3 installed, then run:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ### 3. Exceut the main script:
 python all_models.py
