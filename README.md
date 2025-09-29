@@ -35,6 +35,10 @@ The dataset is in a file called `data.csv` with the following columns:
 ### Special Column:
 - `Mo`: Used to split the data into training (`Mo=0`) and test (`Mo=1`) sets.
 
+## 🧪 Additional Application Dataset
+
+In addition to the main dataset (data.csv), which contains 350 samples used for model training and evaluation, we prepared a separate file named experiment_data.csv. This file includes only our real-world experimental measurements collected under nanomembrane-covered composting conditions. Unlike data.csv, the experiment_data.csv file was not used during training or testing of the models. Instead, it was reserved exclusively for model application, where the trained MLP was applied to assess the mitigation effect of the nanomembrane by projecting uncovered emissions from covered-condition input features.
+
 ## ⚙️ Requirements
 
 ```bash
